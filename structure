@@ -1,0 +1,23 @@
+DISHES
+    id INT PK
+    name String
+    recipe_id INT FK
+
+RECIPES
+    id INT PK
+    dish_id INT FK
+
+INGREDIENTS
+    id INT PK
+    name String
+
+RECIPEINGREDIENTS
+    recipe_id INT FK
+    ingredient_id INT FK
+    quantity String
+
+    One to many:
+        Dish to recipe
+    Many to many:
+        Recipe to ingredients
+        Dish to ingredients
