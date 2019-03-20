@@ -1,7 +1,6 @@
 DISHES
     id INT PK
     name String
-    recipe_id INT FK
 
 RECIPES
     id INT PK
