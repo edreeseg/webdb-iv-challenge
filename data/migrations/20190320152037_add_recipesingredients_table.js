@@ -12,6 +12,7 @@ exports.up = function(knex, Promise) {
         .references('id')
         .inTable('ingredients');
     tbl.float('quantity').notNullable();
+    tbl.string('unit').notNullable();
     tbl.timestamp('createdAt').defaultTo(knex.fn.now());
   })
 };

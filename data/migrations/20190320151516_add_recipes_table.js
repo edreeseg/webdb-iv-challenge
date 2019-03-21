@@ -7,6 +7,8 @@ exports.up = function(knex, Promise) {
         .notNullable()
         .references('id')
         .inTable('dishes');
+    tbl
+      .string('instructions', 255);
     tbl.timestamp('createdAt').defaultTo(knex.fn.now());
   })
 };
