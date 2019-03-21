@@ -7,10 +7,13 @@ server.use(cors());
 const port = process.env.PORT || 5000;
 
 server.get('/', (req, res) => {
-    db.getDish(3)
-        .then(dish => res.json({ dish }))
+    db.addRecipe({ dish_id: 5, name: 'test', instructions: 'test' })
+        .then(recipes => {
+            if (recipes.errno === 19) return Promise.reject(404)
+            else res.send('test');
+        })
         .catch(error => {
-            if (error === 404) return res.status(404).json({ error: 'No dish with this ID found.' });
+            if (error === 404) return res.status(404).json({ error: 'Provided dish_id key must match a currently existing dish.' });
             else return res.status(500).json({ error });
         });
 })

@@ -17,7 +17,8 @@ function getDishes() {
 function addDish(dish){
     return db('dishes')
         .insert(dish)
-        .then(res => res)
+        .then(res => res[0])
+        .catch(error => error);
 };
 
 function getDish(id){
@@ -33,12 +34,25 @@ function getDish(id){
     });
 };
 
-function getRecipes(){ // Should include dish they belong to
-    return db('recipes');
+function getRecipes(){ 
+    return new Promise(async (resolve, reject) => {
+        try {
+            const recipes = await db('recipes');
+            const dishes = await db('dishes');
+            resolve(
+                recipes.map(entry => {
+                    return {...entry, dish: dishes.find(dish => dish.id === entry.dish_id)};
+                })
+            );
+        } catch {
+            reject(500);
+        }
+    });
 };
 
-function addRecipe(recipe){
+function addRecipe(recipe){ // Need to ensure recipe already exists.
     return db('recipes')
         .insert(recipe)
-        .then(res => res);
+        .then(res => res[0])
+        .catch(error => error);
 };

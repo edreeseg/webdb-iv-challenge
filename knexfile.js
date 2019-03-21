@@ -13,6 +13,11 @@ module.exports = {
     migrations: {
       directory: './data/migrations',
     },
+    pool: { // Make SQLite3 respect foreign keys
+      afterCreate: function (conn, cb) {
+        conn.run('PRAGMA foreign_keys = ON', cb)
+      }
+    },
     useNullAsDefault: true,
   },
 
