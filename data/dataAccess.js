@@ -8,6 +8,7 @@ module.exports = {
     getDish,
     getRecipes,
     addRecipe,
+    getShoppingList,
 };
 
 function getDishes() {
@@ -56,3 +57,7 @@ function addRecipe(recipe){ // Need to ensure recipe already exists.
         .then(res => res[0])
         .catch(error => error);
 };
+
+function getShoppingList(id){
+    return db('ingredients');
+}

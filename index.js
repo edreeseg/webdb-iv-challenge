@@ -7,7 +7,7 @@ server.use(cors());
 const port = process.env.PORT || 5000;
 
 server.get('/', (req, res) => {
-    db.addRecipe({ dish_id: 5, name: 'test', instructions: 'test' })
+    db.getShoppingList(1)
         .then(recipes => {
             if (recipes.errno === 19) return Promise.reject(404)
             else res.send('test');
