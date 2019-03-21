@@ -21,11 +21,19 @@ function addDish(dish){
 };
 
 function getDish(id){
-    return db('dishes')
-        .where({ id });
+    return new Promise(async (resolve, reject) => {
+        try {
+            const dish = (await db('dishes').where({ id }))[0]; // There must be a cleaner way to do this
+            if (!dish) reject(404); 
+            const recipes = await db('recipes').where({ dish_id: id });
+            resolve({...dish, recipes});
+        } catch {
+            reject(500);
+        }
+    });
 };
 
-function getRecipes(){
+function getRecipes(){ // Should include dish they belong to
     return db('recipes');
 };
 
