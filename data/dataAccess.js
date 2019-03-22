@@ -9,6 +9,10 @@ module.exports = {
   getRecipes,
   addRecipe,
   getShoppingList,
+  getRecipe,
+  getIngredients,
+  getIngredient,
+  addIngredient,
 };
 
 function getDishes() {
@@ -54,8 +58,36 @@ function getRecipes() {
   });
 }
 
+function getRecipe(id) {
+  // This needs refactoring
+  return new Promise(async (resolve, reject) => {
+    try {
+      let meal = await db
+        .select(
+          'recipes.name AS recipe_name',
+          'dishes.name AS dish_name',
+          'recipes.id AS recipe_id'
+        )
+        .from('recipes')
+        .where({ 'recipes.id': id })
+        .innerJoin('dishes', 'dish_id', 'dishes.id');
+      meal = meal[0];
+      const ingredients = await db
+        .select('ingredients.name', 'quantity', 'unit')
+        .from('recipesingredients')
+        .where({ recipe_id: meal.recipe_id })
+        .innerJoin('ingredients', 'ingredient_id', 'ingredients.id');
+      meal.ingredients = ingredients;
+      delete meal.recipe_id;
+      resolve(meal);
+    } catch (e) {
+      console.log(e);
+      reject(e);
+    }
+  });
+}
+
 function addRecipe(recipe) {
-  // Need to ensure recipe already exists.
   return db('recipes')
     .insert(recipe)
     .then(res => res[0])

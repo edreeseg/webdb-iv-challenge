@@ -7,7 +7,7 @@ server.use(cors());
 const port = process.env.PORT || 5000;
 
 server.get('/', (req, res) => {
-  db.getShoppingList(3)
+  db.getRecipe(1)
     .then(recipes => {
       if (recipes.errno === 19) return Promise.reject(404);
       else {
