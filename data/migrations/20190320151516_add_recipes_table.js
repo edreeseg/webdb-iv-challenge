@@ -11,7 +11,8 @@ exports.up = function(knex, Promise) {
       .string('name', 255)
       .notNullable();
     tbl
-      .string('instructions', 255);
+      .string('instructions', 255)
+      .notNullable();
     tbl.timestamp('createdAt').defaultTo(knex.fn.now());
   })
 };

@@ -6,10 +6,11 @@ module.exports = {
   getDishes,
   addDish,
   getDish,
+  deleteDish,
   getRecipes,
   addRecipe,
-  getShoppingList,
   getRecipe,
+  getShoppingList,
   getIngredients,
   getIngredient,
   addIngredient,
@@ -34,9 +35,15 @@ function getDish(id) {
       const recipes = await db('recipes').where({ dish_id: id });
       resolve({ ...dish, recipes });
     } catch (e) {
-      reject(500);
+      reject(e);
     }
   });
+}
+
+function deleteDish(id){
+    return db('dishes')
+        .where({ id })
+        .del();
 }
 
 function getRecipes() {
@@ -53,7 +60,7 @@ function getRecipes() {
         })
       );
     } catch (e) {
-      reject(500);
+      reject(e);
     }
   });
 }
@@ -72,6 +79,7 @@ function getRecipe(id) {
         .where({ 'recipes.id': id })
         .innerJoin('dishes', 'dish_id', 'dishes.id');
       meal = meal[0];
+      if (!meal) reject(404);
       const ingredients = await db
         .select('ingredients.name', 'quantity', 'unit')
         .from('recipesingredients')
@@ -81,7 +89,6 @@ function getRecipe(id) {
       delete meal.recipe_id;
       resolve(meal);
     } catch (e) {
-      console.log(e);
       reject(e);
     }
   });
@@ -91,7 +98,9 @@ function addRecipe(recipe) {
   return db('recipes')
     .insert(recipe)
     .then(res => res[0])
-    .catch(error => error);
+    .catch(error => {
+        throw error;
+    });
 }
 
 function getShoppingList(id) {
@@ -108,11 +117,4 @@ function getIngredients() {
 
 function getIngredient(id) {
   return db('ingredients').where({ id });
-}
-
-function addIngredient(ing) {
-  return db('ingredients')
-    .insert(ing)
-    .then(res => res[0])
-    .catch(err => err);
 }
